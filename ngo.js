@@ -453,35 +453,35 @@ let Chaincode = class {
    ************************************************************************************************/
 
    /**
-   * Creates a new donor
+   * Creates a new User
    * 
    * @param {*} stub 
    * @param {*} args - JSON as follows:
    * {
-   *    "donorUserName":"edge",
+   *    "userName":"edge",
    *    "email":"edge@abc.com",
-   *    "registeredDate":"2018-10-22T11:52:20.182Z"
+   *    userType:"individual"
    * }
    */
-  async createDonor(stub, args) {
-    console.log('============= START : createDonor ===========');
-    console.log('##### createDonor arguments: ' + JSON.stringify(args));
+  async createUser(stub, args) {
+    console.log('============= START : createUser ===========');
+    console.log('##### createUser arguments: ' + JSON.stringify(args));
 
     // args is passed as a JSON string
     let json = JSON.parse(args);
-    let key = 'donor' + json['donorUserName'];
-    json['docType'] = 'donor';
+    let key = 'user' + json['userName'];
+    json['docType'] = 'user';
 
-    console.log('##### createDonor payload: ' + JSON.stringify(json));
+    console.log('##### createUser payload: ' + JSON.stringify(json));
 
     // Check if the donor already exists
-    let donorQuery = await stub.getState(key);
-    if (donorQuery.toString()) {
-      throw new Error('##### createDonor - This donor already exists: ' + json['donorUserName']);
+    let userQuery = await stub.getState(key);
+    if (userQuery.toString()) {
+      throw new Error('##### createUser - This user already exists: ' + json['userName']);
     }
 
     await stub.putState(key, Buffer.from(JSON.stringify(json)));
-    console.log('============= END : createDonor ===========');
+    console.log('============= END : createUser ===========');
   }
 
   /**
@@ -490,29 +490,29 @@ let Chaincode = class {
    * @param {*} stub 
    * @param {*} args 
    */
-  async queryDonor(stub, args) {
-    console.log('============= START : queryDonor ===========');
-    console.log('##### queryDonor arguments: ' + JSON.stringify(args));
+  async queryUser(stub, args) {
+    console.log('============= START : queryUser ===========');
+    console.log('##### queryUser arguments: ' + JSON.stringify(args));
 
     // args is passed as a JSON string
     let json = JSON.parse(args);
-    let key = 'donor' + json['donorUserName'];
+    let key = 'user' + json['userName'];
     console.log('##### queryDonor key: ' + key);
 
     return queryByKey(stub, key);
   }
 
   /**
-   * Retrieves all donors
+   * Retrieves all users
    * 
    * @param {*} stub 
    * @param {*} args 
    */
-  async queryAllDonors(stub, args) {
-    console.log('============= START : queryAllDonors ===========');
-    console.log('##### queryAllDonors arguments: ' + JSON.stringify(args));
+  async queryAllUsers(stub, args) {
+    console.log('============= START : queryAllUsers ===========');
+    console.log('##### queryAllUsers arguments: ' + JSON.stringify(args));
  
-    let queryString = '{"selector": {"docType": "donor"}}';
+    let queryString = '{"selector": {"docType": "user"}}';
     return queryByString(stub, queryString);
   }
 
