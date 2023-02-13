@@ -36,8 +36,8 @@ var hfc = require('fabric-client');
 const uuidv4 = require('uuid/v4');
 
 var connection = require('./connection.js');
-var query = require('../blockcerti/query.js');
-var invoke = require('../blockcerti/invoke.js');
+var query = require('./query.js');
+var invoke = require('./invoke.js');
 var blockListener = require('./blocklistener.js');
 
 hfc.addConfigFile('config.json');
@@ -140,33 +140,33 @@ app.post('/users', awaitHandler(async (req, res) => {
 }));
 
 /************************************************************************************
- * Donor methods
+ * Enroll User methods
  ************************************************************************************/
 
-// GET Donor
-app.get('/donors', awaitHandler(async (req, res) => {
+// GET User
+app.get('/users', awaitHandler(async (req, res) => {
 	logger.info('================ GET on Donor');
 	let args = {};
-	let fcn = "queryAllDonors";
+	let fcn = "queryAllUsers";
 
-    logger.info('##### GET on Donor - username : ' + username);
-	logger.info('##### GET on Donor - userOrg : ' + orgName);
-	logger.info('##### GET on Donor - channelName : ' + channelName);
-	logger.info('##### GET on Donor - chaincodeName : ' + chaincodeName);
-	logger.info('##### GET on Donor - fcn : ' + fcn);
-	logger.info('##### GET on Donor - args : ' + JSON.stringify(args));
-	logger.info('##### GET on Donor - peers : ' + peers);
+    logger.info('##### GET on User - username : ' + username);
+	logger.info('##### GET on User - userOrg : ' + orgName);
+	logger.info('##### GET on User - channelName : ' + channelName);
+	logger.info('##### GET on User - chaincodeName : ' + chaincodeName);
+	logger.info('##### GET on User - fcn : ' + fcn);
+	logger.info('##### GET on User - args : ' + JSON.stringify(args));
+	logger.info('##### GET on User - peers : ' + peers);
 
     let message = await query.queryChaincode(peers, channelName, chaincodeName, args, fcn, username, orgName);
  	res.send(message);
 }));
 
-// GET a specific Donor
-app.get('/donors/:donorUserName', awaitHandler(async (req, res) => {
-	logger.info('================ GET on Donor by ID');
-	logger.info('Donor username : ' + req.params);
+// GET a specific User
+app.get('/donors/:userName', awaitHandler(async (req, res) => {
+	logger.info('================ GET on User ');
+	logger.info('username : ' + req.params);
 	let args = req.params;
-	let fcn = "queryDonor";
+	let fcn = "queryUser";
 
     logger.info('##### GET on Donor by username - username : ' + username);
 	logger.info('##### GET on Donor by username - userOrg : ' + orgName);
