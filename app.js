@@ -36,8 +36,8 @@ var hfc = require('fabric-client');
 const uuidv4 = require('uuid/v4');
 
 var connection = require('./connection.js');
-var query = require('./query.js');
-var invoke = require('./invoke.js');
+var query = require('../query.js');
+var invoke = require('../invoke.js');
 var blockListener = require('./blocklistener.js');
 
 hfc.addConfigFile('config.json');
@@ -140,12 +140,12 @@ app.post('/users', awaitHandler(async (req, res) => {
 }));
 
 /************************************************************************************
- * Enroll User methods
+ * User methods
  ************************************************************************************/
 
 // GET User
 app.get('/users', awaitHandler(async (req, res) => {
-	logger.info('================ GET on Donor');
+	logger.info('================ GET on User');
 	let args = {};
 	let fcn = "queryAllUsers";
 
@@ -162,56 +162,56 @@ app.get('/users', awaitHandler(async (req, res) => {
 }));
 
 // GET a specific User
-app.get('/donors/:userName', awaitHandler(async (req, res) => {
-	logger.info('================ GET on User ');
-	logger.info('username : ' + req.params);
+app.get('/Users/:userName', awaitHandler(async (req, res) => {
+	logger.info('================ GET on User by username');
+	logger.info('User username : ' + req.params);
 	let args = req.params;
 	let fcn = "queryUser";
 
-    logger.info('##### GET on Donor by username - username : ' + username);
-	logger.info('##### GET on Donor by username - userOrg : ' + orgName);
-	logger.info('##### GET on Donor by username - channelName : ' + channelName);
-	logger.info('##### GET on Donor by username - chaincodeName : ' + chaincodeName);
-	logger.info('##### GET on Donor by username - fcn : ' + fcn);
-	logger.info('##### GET on Donor by username - args : ' + JSON.stringify(args));
-	logger.info('##### GET on Donor by username - peers : ' + peers);
+    logger.info('##### GET on User by username - username : ' + username);
+	logger.info('##### GET on User by username - userOrg : ' + orgName);
+	logger.info('##### GET on User by username - channelName : ' + channelName);
+	logger.info('##### GET on User by username - chaincodeName : ' + chaincodeName);
+	logger.info('##### GET on User by username - fcn : ' + fcn);
+	logger.info('##### GET on User by username - args : ' + JSON.stringify(args));
+	logger.info('##### GET on User by username - peers : ' + peers);
 
     let message = await query.queryChaincode(peers, channelName, chaincodeName, args, fcn, username, orgName);
  	res.send(message);
 }));
 
-// GET the Donations for a specific Donor
-app.get('/donors/:donorUserName/donations', awaitHandler(async (req, res) => {
-	logger.info('================ GET on Donations for Donor');
-	logger.info('Donor username : ' + req.params);
+// GET the Certificates of a specific User Dashboard : Individual & Institute 
+app.get('/users/:userName/certificates', awaitHandler(async (req, res) => {
+	logger.info('================ GET on Certificates for User');
+	logger.info('User username : ' + req.params);
 	let args = req.params;
-	let fcn = "queryDonationsForDonor";
+	let fcn = "queryCertificatesForUser";
 
-    logger.info('##### GET on Donations for Donor - username : ' + username);
-	logger.info('##### GET on Donations for Donor - userOrg : ' + orgName);
-	logger.info('##### GET on Donations for Donor - channelName : ' + channelName);
-	logger.info('##### GET on Donations for Donor - chaincodeName : ' + chaincodeName);
-	logger.info('##### GET on Donations for Donor - fcn : ' + fcn);
-	logger.info('##### GET on Donations for Donor - args : ' + JSON.stringify(args));
-	logger.info('##### GET on Donations for Donor - peers : ' + peers);
+    logger.info('##### GET on Certificates for User - username : ' + username);
+	logger.info('##### GET on Certificates for User - userOrg : ' + orgName);
+	logger.info('##### GET on Certificates for User - channelName : ' + channelName);
+	logger.info('##### GET on Certificates for User - chaincodeName : ' + chaincodeName);
+	logger.info('##### GET on Certificates for User - fcn : ' + fcn);
+	logger.info('##### GET on Certificates for User - args : ' + JSON.stringify(args));
+	logger.info('##### GET on Certificates for User - peers : ' + peers);
 
     let message = await query.queryChaincode(peers, channelName, chaincodeName, args, fcn, username, orgName);
  	res.send(message);
 }));
 
-// POST Donor
-app.post('/donors', awaitHandler(async (req, res) => {
-	logger.info('================ POST on Donor');
+// POST User
+app.post('/users', awaitHandler(async (req, res) => {
+	logger.info('================ POST on User');
 	var args = req.body;
-	var fcn = "createDonor";
+	var fcn = "createUser";
 
-    logger.info('##### POST on Donor - username : ' + username);
-	logger.info('##### POST on Donor - userOrg : ' + orgName);
-	logger.info('##### POST on Donor - channelName : ' + channelName);
-	logger.info('##### POST on Donor - chaincodeName : ' + chaincodeName);
-	logger.info('##### POST on Donor - fcn : ' + fcn);
-	logger.info('##### POST on Donor - args : ' + JSON.stringify(args));
-	logger.info('##### POST on Donor - peers : ' + peers);
+    logger.info('##### POST on User - username : ' + username);
+	logger.info('##### POST on User - userOrg : ' + orgName);
+	logger.info('##### POST on User - channelName : ' + channelName);
+	logger.info('##### POST on User - chaincodeName : ' + chaincodeName);
+	logger.info('##### POST on User - fcn : ' + fcn);
+	logger.info('##### POST on User - args : ' + JSON.stringify(args));
+	logger.info('##### POST on User - peers : ' + peers);
 
 	let message = await invoke.invokeChaincode(peers, channelName, chaincodeName, args, fcn, username, orgName);
 	res.send(message);
@@ -222,7 +222,7 @@ app.post('/donors', awaitHandler(async (req, res) => {
  ************************************************************************************/
 
 // GET NGO
-app.get('/ngos', awaitHandler(async (req, res) => {
+/*app.get('/ngos', awaitHandler(async (req, res) => {
 	logger.info('================ GET on NGO');
 	let args = {};
 	let fcn = "queryAllNGOs";
@@ -334,11 +334,11 @@ app.post('/ngos', awaitHandler(async (req, res) => {
 }));
 
 /************************************************************************************
- * Donation methods
+ * Donations methods  
  ************************************************************************************/
 
 // GET Donation
-app.get('/donations', awaitHandler(async (req, res) => {
+/*app.get('/donations', awaitHandler(async (req, res) => {
 	logger.info('================ GET on Donation');
 	let args = {};
 	let fcn = "queryAllDonations";
@@ -416,7 +416,7 @@ app.post('/donations', awaitHandler(async (req, res) => {
  ************************************************************************************/
 
 // GET Spend
-app.get('/spend', awaitHandler(async (req, res) => {
+/*app.get('/spend', awaitHandler(async (req, res) => {
 	logger.info('================ GET on Spend');
 	let args = {};
 	let fcn = "queryAllSpend";
@@ -495,7 +495,7 @@ app.post('/spend', awaitHandler(async (req, res) => {
  ************************************************************************************/
 
 // GET all SpendAllocation records
-app.get('/spendallocations', awaitHandler(async (req, res) => {
+/*app.get('/spendallocations', awaitHandler(async (req, res) => {
 	logger.info('================ GET on spendAllocation');
 	let args = {};
 	let fcn = "queryAllSpendAllocations";
@@ -516,7 +516,7 @@ app.get('/spendallocations', awaitHandler(async (req, res) => {
  * Ratings methods
  ************************************************************************************/
 
- // POST Rating
+ /*// POST Rating
 app.post('/ratings', awaitHandler(async (req, res) => {
 	logger.info('================ POST on Ratings');
 	var args = req.body;
@@ -535,11 +535,11 @@ app.post('/ratings', awaitHandler(async (req, res) => {
 }));
 
 // GET a specific Rating
-app.get('/ratings/:ngoRegistrationNumber/:donorUserName', awaitHandler(async (req, res) => {
+app.get('/ratings/:ngoRegistrationNumber/:UserUserName', awaitHandler(async (req, res) => {
 	logger.info('================ GET on Rating by ID');
 	logger.info('Rating ID : ' + util.inspect(req.params));
 	let args = req.params;
-	let fcn = "queryDonorRatingsForNGO";
+	let fcn = "queryUserRatingsForNGO";
 
     logger.info('##### GET on Rating - username : ' + username);
 	logger.info('##### GET on Rating - userOrg : ' + orgName);
@@ -555,7 +555,7 @@ app.get('/ratings/:ngoRegistrationNumber/:donorUserName', awaitHandler(async (re
 
 
 /************************************************************************************
- * Blockcerti Certificate  methods
+ * Blockcerti Certificate Methods
  ************************************************************************************/
 
 // POST Certificate
@@ -621,13 +621,13 @@ app.get('/users/:emailID/certificates', awaitHandler(async (req, res) => {
 	let args = req.params;
 	let fcn = "queryCertificatesFromEmailID";
 
-    logger.info('##### GET on Donations for Donor - username : ' + username);
-	logger.info('##### GET on Donations for Donor - userOrg : ' + orgName);
-	logger.info('##### GET on Donations for Donor - channelName : ' + channelName);
-	logger.info('##### GET on Donations for Donor - chaincodeName : ' + chaincodeName);
-	logger.info('##### GET on Donations for Donor - fcn : ' + fcn);
-	logger.info('##### GET on Donations for Donor - args : ' + JSON.stringify(args));
-	logger.info('##### GET on Donations for Donor - peers : ' + peers);
+    logger.info('##### GET on Certificates for User - username : ' + username);
+	logger.info('##### GET on Certificates for User - userOrg : ' + orgName);
+	logger.info('##### GET on Certificates for User - channelName : ' + channelName);
+	logger.info('##### GET on Certificates for User - chaincodeName : ' + chaincodeName);
+	logger.info('##### GET on Certificates for User - fcn : ' + fcn);
+	logger.info('##### GET on Certificates for User - args : ' + JSON.stringify(args));
+	logger.info('##### GET on Certificates for User - peers : ' + peers);
 
     let message = await query.queryChaincode(peers, channelName, chaincodeName, args, fcn, username, orgName);
  	res.send(message);
@@ -733,4 +733,3 @@ app.get('/blockinfos/:docType/keys/:key', awaitHandler(async (req, res) => {
 app.use(function(error, req, res, next) {
 	res.status(500).json({ error: error.toString() });
 });
-
